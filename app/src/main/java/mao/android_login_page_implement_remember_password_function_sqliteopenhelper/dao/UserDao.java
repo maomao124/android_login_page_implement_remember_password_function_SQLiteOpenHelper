@@ -198,9 +198,13 @@ public class UserDao extends SQLiteOpenHelper
      */
     public User queryById(Serializable phone)
     {
+        User user = null;
         Cursor cursor = readDatabase.query(TABLE_NAME, null, "phone=?", new String[]{String.valueOf(phone)}, null, null, null);
-        User user = new User();
-        setUser(cursor, user);
+        if (cursor.moveToNext())
+        {
+            user = new User();
+            setUser(cursor, user);
+        }
         cursor.close();
         return user;
     }
@@ -322,8 +326,12 @@ public class UserDao extends SQLiteOpenHelper
 
     public User queryLastTime()
     {
+        User user = null;
         Cursor cursor = readDatabase.query(TABLE_NAME, null, "1=1", new String[]{}, null, null, "lastUpdateTime desc");
-        User user = setUser(cursor, new User());
+        if (cursor.moveToNext())
+        {
+            user = setUser(cursor, new User());
+        }
         cursor.close();
         return user;
     }

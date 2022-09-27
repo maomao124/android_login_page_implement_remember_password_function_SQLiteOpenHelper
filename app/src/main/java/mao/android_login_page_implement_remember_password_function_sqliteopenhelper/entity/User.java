@@ -44,6 +44,20 @@ public class User
     }
 
     /**
+     * 用户
+     *
+     * @param phone          电话
+     * @param password       密码
+     * @param lastUpdateTime 最后更新时间
+     */
+    public User(String phone, String password, Long lastUpdateTime)
+    {
+        this.phone = phone;
+        this.password = password;
+        this.lastUpdateTime = lastUpdateTime;
+    }
+
+    /**
      * Gets phone.
      *
      * @return the phone

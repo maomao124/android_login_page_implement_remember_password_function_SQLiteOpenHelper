@@ -26,9 +26,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.Random;
 
 import mao.android_login_page_implement_remember_password_function_sqliteopenhelper.dao.UserDao;
+import mao.android_login_page_implement_remember_password_function_sqliteopenhelper.entity.User;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener
 {
@@ -312,13 +314,25 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private void loadData()
     {
         Log.d(TAG, "loadData: start");
-        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+//        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+//
+//        String phone = sharedPreferences.getString("phone", "");
+//        String password = sharedPreferences.getString("password", "");
 
-        String phone = sharedPreferences.getString("phone", "");
-        String password = sharedPreferences.getString("password", "");
+        UserDao instance = UserDao.getInstance(this);
+        instance.openReadConnection();
+        User user = instance.queryLastTime();
+        if (user == null)
+        {
+            return;
+        }
+        String phone = user.getPhone();
+        String password = user.getPassword();
 
         et_phone.setText(phone);
         et_password.setText(password);
+        ck_remember.setChecked(true);
+        instance.closeConnection();
     }
 
     /**
@@ -333,17 +347,39 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
         if (ck_remember.isChecked())
         {
-            Log.d(TAG, "saveData: save...");
-            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            Log.d(TAG, "saveData: save...");
+//            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//            String phone = et_phone.getText().toString();
+//            String password = et_password.getText().toString();
+//
+//            editor.putString("phone", phone);
+//            editor.putString("password", password);
+//
+//            editor.apply();
 
             String phone = et_phone.getText().toString();
             String password = et_password.getText().toString();
 
-            editor.putString("phone", phone);
-            editor.putString("password", password);
+            User user = new User(phone, password, new Date().getTime());
+            boolean b = userDao.insertOrUpdate(user);
+            if (!b)
+            {
+                Toast.makeText(this, "保存或者更新失败", Toast.LENGTH_SHORT).show();
+            }
+            Toast.makeText(this, "保存或者更新成功", Toast.LENGTH_SHORT).show();
 
-            editor.apply();
+        }
+        else
+        {
+            String phone = et_phone.getText().toString();
+            User user = userDao.queryById(phone);
+            if (user != null)
+            {
+                userDao.delete(phone);
+            }
+
         }
     }
 
@@ -354,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         userDao = UserDao.getInstance(this);
         userDao.openReadConnection();
         userDao.openWriteConnection();
+        Log.d(TAG, "onResume: queryAll:\n" + userDao.queryAll());
     }
 
     @Override
