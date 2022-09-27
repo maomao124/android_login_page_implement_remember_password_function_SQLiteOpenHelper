@@ -181,12 +181,28 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     {
         if (rb_password.isChecked())
         {
-            if (!password.equals(et_password.getText().toString()))
+//            if (!password.equals(et_password.getText().toString()))
+//            {
+//                Toast.makeText(this, "请输入正确的密码", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+
+            User user = userDao.queryById(et_phone.getText().toString());
+            if (user == null)
+            {
+                if (!password.equals(et_password.getText().toString()))
+                {
+                    Toast.makeText(this, "请输入正确的密码", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                loginSuccess();
+                return;
+            }
+            if (!(et_password.getText().toString().equals(user.getPassword())))
             {
                 Toast.makeText(this, "请输入正确的密码", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // 提示用户登录成功
             loginSuccess();
         }
         else if (rb_verifyCode.isChecked())
