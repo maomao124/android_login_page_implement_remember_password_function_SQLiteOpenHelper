@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_paddingTop">50dp</dimen>
+    <dimen name="main_paddingLeftAndRight">5dp</dimen>
+    <dimen name="editText_paddingLeftAndRight">10dp</dimen>
+    <dimen name="common_font_size">17sp</dimen>
+    <dimen name="button_font_size">20sp</dimen>
+    <dimen name="item_layout_height">50dp</dimen>
+</resources>
