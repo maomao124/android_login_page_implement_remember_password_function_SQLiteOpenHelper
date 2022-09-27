@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import mao.android_login_page_implement_remember_password_function_sqliteopenhelper.dao.UserDao;
+
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener
 {
     private TextView tv_password;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     private static final String TAG = "loginPage";
     private RadioGroup rb_login;
+    private UserDao userDao;
 
 
     @Override
@@ -342,5 +345,21 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
             editor.apply();
         }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        userDao = UserDao.getInstance(this);
+        userDao.openReadConnection();
+        userDao.openWriteConnection();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        userDao.closeConnection();
     }
 }
